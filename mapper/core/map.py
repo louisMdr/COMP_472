@@ -41,6 +41,9 @@ class Map:
         self.map_grid[row_index][col_index].set_type(TileTypeFactory.create_type(tile_type))
 
     def validate_index(self, tile_index: int) -> bool:
+        """
+        Validates an tile is in the grid
+        """
         row_index, col_index = self.__translate_index(tile_index)
         return (
             -1 < row_index < self.num_rows and
@@ -48,11 +51,17 @@ class Map:
         )
 
     def __translate_index(self, tile_index: int) -> Tuple[int, int]:
+        """
+        Turns a user entered tile_index into a 2D index
+        """
         row_index = int((tile_index - 1) / self.num_columns)
         col_index = (tile_index - 1) % self.num_columns
         return row_index, col_index
 
     def __create_new_node(self, row_idx: int, col_idx: int) -> Node:
+        """
+        Creates a new node, making sure to add it to the lookup map by name
+        """
         new_node = Node(row_idx, col_idx, self.num_columns)
         self._node_lookup[new_node.get_name()] = new_node
         return new_node
@@ -107,7 +116,7 @@ class Map:
                 if row_idx != 0 and not self.__max_node_col(col_idx):
                     # connect diagonal up
                     # make sure this is not along top or right edge
-                    next_node = self._node_grid[row_idx - 1][col_idx - 1]
+                    next_node = self._node_grid[row_idx - 1][col_idx + 1]
                     crossing_tile = self.map_grid[row_idx - 1][col_idx]
                     self.__create_edge(node, next_node, crossing_tile, accept_none=False)
 
@@ -129,6 +138,9 @@ class Map:
                       tile_one: Tile,
                       tile_two: Tile = None,
                       accept_none: bool = True):
+        """
+        Creates an appropriate edge based on the args, also updates each nodes edges
+        """
         if tile_two is not None or accept_none:
             # regular straight edge
             edge = StraightEdge(node_one, node_two, tile_one, tile_two)
@@ -175,7 +187,7 @@ class Map:
                         incrementer = incrementer if incrementer != 0 else 1
                         if self.__max_grid_col(col_idx):
                             # last tile in the row, add the | on the right side
-                            collected_strs[cur_row_idx] += self.map_grid[row_idx][col_idx].to_str_display(idx, include_right=True)
+                            collected_strs[cur_row_idx] += self.map_grid[row_idx][col_idx].to_str_display(idx, include_right=True, name=node_name)
                         else:
                             # inside the grid
                             collected_strs[cur_row_idx] += self.map_grid[row_idx][col_idx].to_str_display(idx, name=node_name)

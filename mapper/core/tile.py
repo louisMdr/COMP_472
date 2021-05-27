@@ -15,6 +15,7 @@ class Tile:
         self.num_display_rows: int = 9
         self.display_width: int = 9
         self.tile_type: Optional[TileType] = None
+        self.label: Optional[str] = None
 
     def set_type(self, tile_type: TileType):
         self.tile_type = tile_type
@@ -41,11 +42,11 @@ class Tile:
     def __content_label(self, include_right: bool = False) -> str:
         idx_label = (self.num_in_row * self.row_idx) + self.col_idx + 1
         tile_label = f'-{str(self.tile_type)}' if self.tile_type is not None else ''
-        label = f'{idx_label}{tile_label}'
-        padding = self.display_width - len(label)
+        self.label = f'{idx_label}{tile_label}'
+        padding = self.display_width - len(self.label)
         left_padding = int(padding / 2)
         right_padding = padding - left_padding
-        return f'|{left_padding * " "}{label}{right_padding * " "}{"|" if include_right else ""}'
+        return f'|{left_padding * " "}{self.label}{right_padding * " "}{"|" if include_right else ""}'
 
     def __horizontal_bound(self, name: str = None) -> str:
         return '-' * ((self.display_width + 1) - (0 if name is None else len(name)))
