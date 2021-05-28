@@ -23,21 +23,44 @@ class Tile:
     def display_size(self) -> int:
         return self.num_display_rows - 1
 
-    def to_str_display(self, iteration: int, include_right: bool = False, name: str = None) -> str:
+    def to_str_display(self,
+                       iteration: int,
+                       include_right: bool = False,
+                       name: str = None,
+                       horizontal_label: str = None,
+                       left_vertical_label: str = None,
+                       right_vertical_label: str = None,
+                       leftmost: bool = False) -> str:
         if iteration in [0, self.num_display_rows - 1]:
             # top or bottom edge
-            return self.__horizontal_bound(name)
+            return self.__horizontal_bound(name, horizontal_label=horizontal_label)
         elif int((self.num_display_rows - 1) / 2) == iteration:
             # in the middle, display the idx and the tile-type
             return self.__content_label(include_right)
         else:
             # return empty space
-            return self.__fill(include_right)
+            return self.__fill(
+                include_right,
+                left_vertical_label=left_vertical_label,
+                right_vertical_label=right_vertical_label,
+                leftmost=leftmost
+            )
 
-    def __fill(self, include_right: bool = False):
-        row_str = '|' + (self.display_width * ' ')
-        row_str = row_str if not include_right else f'{row_str}|'
-        return row_str
+    def __fill(self,
+               include_right: bool = False,
+               left_vertical_label: str = None,
+               right_vertical_label: str = None,
+               leftmost: bool = False) -> str:
+        left_characters = '|' if left_vertical_label is None else left_vertical_label
+        if left_vertical_label is None:
+            dw = self.display_width
+        elif left_vertical_label is not None and leftmost:
+            dw = self.display_width - len(left_vertical_label) + 1
+        else:
+            dw = self.display_width - int(len(left_vertical_label) / 2)
+        row_str = dw * ' '
+        right_characters = '' if not include_right else ('|' if right_vertical_label is None else right_vertical_label)
+        return f'{left_characters}{row_str}{right_characters}'
 
     def __content_label(self, include_right: bool = False) -> str:
         idx_label = (self.num_in_row * self.row_idx) + self.col_idx + 1
@@ -48,8 +71,15 @@ class Tile:
         right_padding = padding - left_padding
         return f'|{left_padding * " "}{self.label}{right_padding * " "}{"|" if include_right else ""}'
 
-    def __horizontal_bound(self, name: str = None) -> str:
-        return '-' * ((self.display_width + 1) - (0 if name is None else len(name)))
+    def __horizontal_bound(self, name: str = None, horizontal_label: str = None) -> str:
+        total_len = (self.display_width + 1) - (0 if name is None else len(name))
+        if horizontal_label is None:
+            return '-' * total_len
+        else:
+            pad_len = total_len - len(horizontal_label)
+            left_pad_len = int(pad_len / 2)
+            right_pad_len = pad_len - left_pad_len
+            return f'{"-" * left_pad_len}{horizontal_label}{"-" * right_pad_len}'
 
 
 class TileTypeFactory:
