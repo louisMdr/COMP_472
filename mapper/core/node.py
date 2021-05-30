@@ -1,6 +1,6 @@
 from typing import List, Union, Optional
 
-from mapper.core.edge import Edge
+from mapper.core.edge import Edge, DiagonalEdge
 
 
 class Node:
@@ -29,9 +29,35 @@ class Node:
     def add_edge(self, edge: Edge):
         self.edges.append(edge)
 
+    def get_user_point_in_tile_label(self, divisor: int) -> Union[str, None]:
+        for edge in self.edges:
+            if (
+                isinstance(edge, DiagonalEdge) and
+                edge.get_other_node(self).name in ['START', 'END'] and
+                edge.get_other_node(self).is_inside_tile(self.col_idx, self.row_idx, divisor)
+            ):
+                return edge.get_other_node(self).name
+        return None
+
+    def is_inside_tile(self, x: Union[int, float], y: Union[int, float], divisor: int) -> bool:
+        diag_x, diag_y = x + 1, y + 1
+        node_x, node_y = self.col_idx / divisor, self.row_idx / divisor
+        return (
+            # make sure the node calling this is a node in the grid
+            (isinstance(x, int) and isinstance(y, int)) and
+            # make sure this node is not on a grid sqare
+            not (isinstance(self.col_idx, int) and isinstance(self.row_idx, int)) and
+            x < node_x < diag_x and
+            y < node_y < diag_y
+        )
+
     def get_user_point_label_on_axis(self, vertical_axis: bool, divisor: int) -> Union[str, None]:
         for edge in self.edges:
-            if edge.get_other_node(self).name in ['START', 'END'] and edge.edge_matches_axis_divisor(self, vertical_axis, divisor):
+            if (
+                not isinstance(edge, DiagonalEdge) and
+                edge.get_other_node(self).name in ['START', 'END'] and
+                edge.edge_matches_axis_divisor(self, vertical_axis, divisor)
+            ):
                 return edge.get_other_node(self).name
         return None
 

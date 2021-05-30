@@ -56,13 +56,14 @@ class Map:
             existing_node.revert_name()
             self._node_lookup[existing_node.get_name()] = existing_node
 
+        new_nodes = [elem for elem in self._user_created if isinstance(elem, Node)]
         if len(self._user_created) == 0:
             # user created both nodes on existing nodes
             for name in ['START', 'END']:
                 revert_name(name)
-        elif len([elem for elem in self._user_created if isinstance(elem, Node)]) < 2:
+        elif len(new_nodes) < 2:
             # user created on node on existing node
-            key = 'START' if 'START' in self._node_lookup.keys() else 'END'
+            key = 'START' if new_nodes[0].get_name() != 'START' else 'END'
             revert_name(key)
         # revert all things that were user created
         for elem in self._user_created:
@@ -99,9 +100,54 @@ class Map:
             self.__add_to_tile(x, y, name)
 
     def __add_to_tile(self, x: float, y: float, name: str):
+        # get all nodes
         row_idx = int(y / self.TILE_WIDTH)
         col_idx = int(x / self.TILE_WIDTH)
-        # have to break up the diagonal edges, and put it at the center of four shorter diagonals...
+        top_left_node = self._node_grid[row_idx][col_idx]
+        bottom_right_node = self._node_grid[row_idx + 1][col_idx + 1]
+        bottom_left_node = self._node_grid[row_idx + 1][col_idx]
+        top_right_node = self._node_grid[row_idx][col_idx + 1]
+        tile = self.map_grid[row_idx][col_idx]
+        downwards_diag, upwards_diag = None, None
+        downleft_idx, downright_idx, upleft_idx, upright_idx = None, None, None, None
+        # get the diagonal edges
+        for i, (node_left, node_right) in enumerate([(top_left_node, bottom_right_node), (bottom_left_node, top_right_node)]):
+            for j, edge in enumerate(node_left.edges):
+                if edge.edge_matches_both_nodes(node_left, node_right):
+                    if i == 0:
+                        downwards_diag = edge
+                        downleft_idx = j
+                        downright_idx = edge.get_other_node_idx(node_right)
+                    else:
+                        upwards_diag = edge
+                        upleft_idx = j
+                        upright_idx = edge.get_other_node_idx(node_right)
+                    self._grid_storage.append(edge)
+                    break
+        # remove the long diagonal edges from all tiles
+        top_left_node.remove_edge_by_idx(downleft_idx)
+        bottom_right_node.remove_edge_by_idx(downright_idx)
+        top_right_node.remove_edge_by_idx(upright_idx)
+        bottom_left_node.remove_edge_by_idx(upleft_idx)
+        # create new
+        new_node = Node(y, x, None, name)
+        top_left_edge = DiagonalEdge(top_left_node, new_node, tile)
+        bottom_left_edge = DiagonalEdge(bottom_left_node, new_node, tile)
+        bottom_right_edge = DiagonalEdge(new_node, bottom_right_node, tile)
+        top_right_edge = DiagonalEdge(new_node, top_right_node, tile)
+        # add all new edges to new node
+        new_node.add_edge(top_left_edge)
+        new_node.add_edge(bottom_left_edge)
+        new_node.add_edge(bottom_right_edge)
+        new_node.add_edge(top_right_edge)
+        # add each edge to the specific existing node
+        bottom_left_node.add_edge(bottom_left_edge)
+        bottom_right_node.add_edge(bottom_right_edge)
+        top_left_node.add_edge(top_left_edge)
+        top_right_node.add_edge(top_right_edge)
+        # store the new stuff
+        self._node_lookup[new_node.get_name()] = new_node
+        self._user_created.extend([new_node, bottom_left_edge, bottom_right_edge, top_right_edge, top_left_edge])
 
     def __add_on_edge(self, x: float, y: float, name: str):
         # have to find the edge that has a node on the same axis, and is higher in idx
@@ -298,10 +344,11 @@ class Map:
         Prints the map to console
         """
         # for printing awkwardly positioned user points:
-        # if incrementer = 0 --> check along top edge, using top left node, check vertical axis
-        # if incrementer = 4 AND MAX GRID COL --> check along right edge
-        # if incrementer = 4 --> check left edge
+        # if counter = 0 --> check along top edge, using top left node, check vertical axis
+        # if counter = 3 AND MAX GRID COL --> check along right edge
+        # if counter = 3 --> check left edge
         # if bottom edge, check bottom edge
+        # if counter = 0 --> check if node has diagonal edge with float coords (user created point in middle of tile)
 
         # assume uniform grid
         tile_size = self.map_grid[0][0].display_size()
@@ -328,11 +375,13 @@ class Map:
                 else:
                     # inside the grid
                     incrementer, counter = 0, 0
+                    middle_label = None
                     for idx in range(tile_size):
                         cur_row_idx += incrementer
                         if counter == 0:
                             # see if there is user-defined point along top edge of tile
                             top_edge_user_label = node.get_user_point_label_on_axis(vertical_axis=False, divisor=self.TILE_WIDTH)
+                            middle_label = node.get_user_point_in_tile_label(self.TILE_WIDTH)
                         else:
                             top_edge_user_label = None
                         if counter == 3:
@@ -349,7 +398,10 @@ class Map:
                             if counter == 3:
                                 # see if there is a user-defined point along the right edge of the tile
                                 next_node = self._node_grid[row_idx][col_idx + 1]
-                                right_vertical_label = next_node.get_user_point_label_on_axis(vertical_axis=True, divisor=self.TILE_WIDTH)
+                                right_vertical_label = next_node.get_user_point_label_on_axis(
+                                    vertical_axis=True,
+                                    divisor=self.TILE_WIDTH
+                                )
                             else:
                                 right_vertical_label = None
                             # last tile in the row, add the | on the right side
@@ -360,7 +412,8 @@ class Map:
                                 horizontal_label=top_edge_user_label,
                                 left_vertical_label=left_edge_user_label,
                                 right_vertical_label=right_vertical_label,
-                                leftmost=col_idx == 0
+                                leftmost=col_idx == 0,
+                                middle_label=middle_label
                             )
                         else:
                             # inside the grid
@@ -369,7 +422,8 @@ class Map:
                                 name=node_name,
                                 horizontal_label=top_edge_user_label,
                                 left_vertical_label=left_edge_user_label,
-                                leftmost=col_idx == 0
+                                leftmost=col_idx == 0,
+                                middle_label=middle_label
                             )
                         counter += 1
         # finished, print
