@@ -12,8 +12,10 @@ class RoleAlgoFactory:
         if role_char == 'C':
             return RoleCAlgo(self.map)
         elif role_char == 'P':
+            # TODO import and instantiate Role P specific algo
             return HeuristicAStar(self.map)
         elif role_char == 'V':
+            # TODO import and instantiate Role V specific algo
             return HeuristicAStar(self.map)
         else:
             raise RuntimeError(f'No algorithm defined for role {role_char}')

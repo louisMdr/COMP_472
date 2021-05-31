@@ -17,9 +17,6 @@ def main():
     role = input('Enter a role: ')
     algo = role_factory.create(role)
     algo.search()
-    revert_map(cov_map)
-
-
 
 
 def revert_map(cov_map: Map):

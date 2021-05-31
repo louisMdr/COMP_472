@@ -9,7 +9,10 @@ class HeuristicAStar:
         self.__update_start()
 
     def __update_start(self):
+        # if a algo is supposed to start at a corner of a tile if it finds itself in the middle of a tile to start
+        # it just needs to implement this algorithm
         pass
 
     def search(self):
+        # each role needs to implement a different search algorithm
         ...
