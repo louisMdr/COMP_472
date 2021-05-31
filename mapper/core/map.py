@@ -11,7 +11,7 @@ class Map:
     Class representing the Covid MAP
 
     """
-    TILE_WIDTH: int = 10
+    TILE_WIDTH: int = 1
 
     def __init__(self, num_columns: int, num_rows: int):
         self.num_columns: int = num_columns
@@ -28,7 +28,7 @@ class Map:
         self._grid_storage: List[Union[Edge, Node]] = []
         # 2D map grid with just the nodes (to make it easier to connect them)
         Node.reset()
-        self._node_grid: list = [
+        self._node_grid: List[List[Node]] = [
             [self.__create_new_node(i, j) for j in range(num_columns + 1)]
             for i in range(num_rows + 1)
         ]
@@ -36,6 +36,15 @@ class Map:
         self.graph: Node = self._node_grid[0][0]
         # connect all the nodes
         self.__connect()
+
+    def lookup_node(self, name: str) -> Node:
+        the_node = self._node_lookup.get(name)
+        if the_node is None:
+            raise RuntimeError(f'No node in map with name {name}')
+        return the_node
+
+    def get_node(self, row_idx: int, col_idx: int) -> Node:
+        return self._node_grid[row_idx][col_idx]
 
     def max_x(self):
         return self.num_columns * self.TILE_WIDTH
@@ -428,3 +437,6 @@ class Map:
                         counter += 1
         # finished, print
         print('\n'.join(collected_strs))
+
+    def get_node_grid(self) -> List[List[Node]]:
+        return self._node_grid

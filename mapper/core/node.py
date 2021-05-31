@@ -1,4 +1,4 @@
-from typing import List, Union, Optional
+from typing import List, Union, Optional, Type
 
 from mapper.core.edge import Edge, DiagonalEdge
 
@@ -45,7 +45,7 @@ class Node:
         return (
             # make sure the node calling this is a node in the grid
             (isinstance(x, int) and isinstance(y, int)) and
-            # make sure this node is not on a grid sqare
+            # make sure this node is not on a grid square
             not (isinstance(self.col_idx, int) and isinstance(self.row_idx, int)) and
             x < node_x < diag_x and
             y < node_y < diag_y
@@ -83,6 +83,11 @@ class Node:
         self.old_name = self.name
         self.name = name
 
-
     def remove_edge_by_idx(self, idx: int):
         self.edges.pop(idx)
+
+    def borders_tile_of_type(self, tile_type: Type) -> bool:
+        for edge in self.edges:
+            if isinstance(edge, DiagonalEdge) and isinstance(edge.crossing.tile_type, tile_type):
+                return True
+        return False
