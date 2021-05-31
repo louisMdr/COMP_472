@@ -30,13 +30,20 @@ class Tile:
                        horizontal_label: str = None,
                        left_vertical_label: str = None,
                        right_vertical_label: str = None,
-                       leftmost: bool = False) -> str:
+                       leftmost: bool = False,
+                       middle_label: str = None) -> str:
         if iteration in [0, self.num_display_rows - 1]:
             # top or bottom edge
             return self.__horizontal_bound(name, horizontal_label=horizontal_label)
         elif int((self.num_display_rows - 1) / 2) == iteration:
             # in the middle, display the idx and the tile-type
             return self.__content_label(include_right)
+        elif int((self.num_display_rows - 1) / 2) - 1 == iteration:
+            # return empty space
+            return self.__fill(
+                include_right,
+                middle_label=middle_label
+            )
         else:
             # return empty space
             return self.__fill(
@@ -50,19 +57,33 @@ class Tile:
                include_right: bool = False,
                left_vertical_label: str = None,
                right_vertical_label: str = None,
-               leftmost: bool = False) -> str:
-        left_characters = '|' if left_vertical_label is None else left_vertical_label
-        if left_vertical_label is None:
-            dw = self.display_width
-        elif left_vertical_label is not None and leftmost:
-            dw = self.display_width - len(left_vertical_label) + 1
+               leftmost: bool = False,
+               middle_label: str = None) -> str:
+        """
+        Creates string representing an inner row of the tile that is not topmost, bottommost, or middle
+        """
+        if middle_label is not None:
+            dw = self.display_width - len(middle_label)
+            left_pad = int(dw / 2)
+            right_pad = dw - left_pad
+            right_char = '' if not include_right else '|'
+            return f'|{" " * left_pad}{middle_label}{" " * right_pad}{right_char}'
         else:
-            dw = self.display_width - int(len(left_vertical_label) / 2)
-        row_str = dw * ' '
-        right_characters = '' if not include_right else ('|' if right_vertical_label is None else right_vertical_label)
-        return f'{left_characters}{row_str}{right_characters}'
+            left_characters = '|' if left_vertical_label is None else left_vertical_label
+            if left_vertical_label is None:
+                dw = self.display_width
+            elif left_vertical_label is not None and leftmost:
+                dw = self.display_width - len(left_vertical_label) + 1
+            else:
+                dw = self.display_width - int(len(left_vertical_label) / 2)
+            row_str = dw * ' '
+            right_characters = '' if not include_right else ('|' if right_vertical_label is None else right_vertical_label)
+            return f'{left_characters}{row_str}{right_characters}'
 
     def __content_label(self, include_right: bool = False) -> str:
+        """
+        Creates representation of the middle row of a tile
+        """
         idx_label = (self.num_in_row * self.row_idx) + self.col_idx + 1
         tile_label = f'-{str(self.tile_type)}' if self.tile_type is not None else ''
         self.label = f'{idx_label}{tile_label}'
@@ -72,6 +93,9 @@ class Tile:
         return f'|{left_padding * " "}{self.label}{right_padding * " "}{"|" if include_right else ""}'
 
     def __horizontal_bound(self, name: str = None, horizontal_label: str = None) -> str:
+        """
+        Creates topmost and bottommost rows of a tile
+        """
         total_len = (self.display_width + 1) - (0 if name is None else len(name))
         if horizontal_label is None:
             return '-' * total_len
@@ -83,7 +107,9 @@ class Tile:
 
 
 class TileTypeFactory:
-
+    """
+    Creates a child class of TileType
+    """
     @staticmethod
     def validate(tile_type: str) -> bool:
         if tile_type.upper() in ['V', 'Q', 'P']:

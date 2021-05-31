@@ -1,5 +1,7 @@
 from mapper.core.map import Map
 from mapper.core.tile import TileTypeFactory
+from mapper.algos.base import HeuristicAStar
+from mapper.algos.factory import RoleAlgoFactory
 
 
 def main():
@@ -11,7 +13,13 @@ def main():
     cov_map = create_map()
     fill_spots(cov_map)
     add_points(cov_map)
+    role_factory = RoleAlgoFactory(cov_map)
+    role = input('Enter a role: ')
+    algo = role_factory.create(role)
+    algo.search()
     revert_map(cov_map)
+
+
 
 
 def revert_map(cov_map: Map):
