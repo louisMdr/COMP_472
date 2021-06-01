@@ -22,8 +22,8 @@ ie: Program uses its own built-in functions for map display
 
 1. First the user creates a grid by entering an integer for both
    the number of rows and number of columnsn.
-2. After the grid is displayed, the user may then select a type
-   for various tiles in the grid, by first entering the tile 
+2. After the grid is displayed, the user may then select the type
+   of various tiles in the grid, by first entering the tile 
    number and then the type: Q for Quarantine, P for PlayGround,
    or V for Vaccine. When done, the user simply enters ## twice.
 3. User then enters the x and y coordinates of the START point, 
