@@ -5,17 +5,10 @@
 #           total_path.prepend(current)
 #       return total_path
 
+# note: if start is at a playground tile, display "no path is found"
 
 # note: if at any point the MIN of the 4 edges is infinite, then return
 # "Path has reached a cost of infinite value, no solution path found"
-
-
-# setting the quantitative values of each tile type:
-# for every tile:
-#      if tile.isVaccine... tile_value = 2
-#      elif tile.isQuarantine... tile_value = float('inf')
-#      elif tile.isPlayground... tile_value = 0
-#      else tile_value = 1
 
 # setting the value for each edge (based on the above tile values):
 # for each edge:

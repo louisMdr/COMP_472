@@ -14,13 +14,15 @@ def main():
     fill_spots(cov_map)
     add_points(cov_map)
     role_factory = RoleAlgoFactory(cov_map)
+
     role = input('Enter a role: ')
+    while role.lower() not in ['c', 'v', 'p']:
+        print('Please try again with C, V, or P\n')
+        role = input('Enter a role: ')
+
     algo = role_factory.create(role)
     algo.search()
     revert_map(cov_map)
-
-
-
 
 def revert_map(cov_map: Map):
     print('Removing user points from map....\n\n')
@@ -81,7 +83,7 @@ def fill_spots(cov_map: Map):
         print_types()
         while True:
             tile_num = None
-            tile_num_str = input(' Enter a tile number to update its type: ')
+            tile_num_str = input(' Enter a tile number to update its type (or ##): ')
             if tile_num_str == '##':
                 break
             tile_num = int(tile_num_str)
@@ -91,7 +93,7 @@ def fill_spots(cov_map: Map):
             else:
                 print('Invalid tile selection, try again')
         while True:
-            tile_choice = input(' Enter a tile type: ')
+            tile_choice = input(' Enter a tile type (or ##): ')
             if tile_choice == '##':
                 break
             if TileTypeFactory.validate(tile_choice):
