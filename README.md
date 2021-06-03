@@ -11,11 +11,11 @@ ie: Program uses its own built-in functions for map display
 
 ### How to Use 
 
-1- Install Python and libraries
+1. Install Python and libraries
 
-2- Change working directory to project directory
+2. Change working directory to project directory
 
-3- Type "python driver.py"
+3. Type "python driver.py"
 
 ### Running the program 
 
