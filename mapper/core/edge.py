@@ -35,12 +35,20 @@ class Edge:
             )
         )
 
-    def edge_matches_axis(self, node, vertical_axis: bool) -> bool:
+    def edge_matches_axis(self, node, vertical_axis: bool, include_other: bool = False) -> bool:
         # checks if the passed node is on the same axis as the desired axis
         other_node = self.node_one if self.node_one.name != node.name else self.node_two
         return (
-            (vertical_axis and other_node.col_idx == node.col_idx and node.row_idx + 1 == other_node.row_idx) or
-            (not vertical_axis and other_node.row_idx == node.row_idx and node.col_idx + 1 == other_node.col_idx)
+            (
+                vertical_axis and
+                other_node.col_idx == node.col_idx and
+                (node.row_idx + 1 == other_node.row_idx or (include_other and node.row_idx - 1 == other_node.row_idx))
+            ) or
+            (
+                not vertical_axis and
+                other_node.row_idx == node.row_idx and
+                (node.col_idx + 1 == other_node.col_idx or (include_other and node.col_idx - 1 == other_node.col_idx))
+            )
         )
 
     def get_other_node(self, node):

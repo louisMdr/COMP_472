@@ -1,5 +1,6 @@
 from mapper.core.map import Map
 from mapper.algos.c import RoleCAlgo
+from mapper.algos.p import RolePAlgo
 from mapper.algos.base import HeuristicAStar
 
 
@@ -13,7 +14,7 @@ class RoleAlgoFactory:
             return RoleCAlgo(self.map)
         elif role_char == 'P':
             # TODO import and instantiate Role P specific algo
-            return HeuristicAStar(self.map)
+            return RolePAlgo(self.map)
         elif role_char == 'V':
             # TODO import and instantiate Role V specific algo
             return HeuristicAStar(self.map)

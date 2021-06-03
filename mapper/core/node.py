@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import List, Union, Optional, Type
 
 from mapper.core.edge import Edge, DiagonalEdge
@@ -59,6 +60,34 @@ class Node:
                 edge.edge_matches_axis_divisor(self, vertical_axis, divisor)
             ):
                 return edge.get_other_node(self).name
+        return None
+
+    def get_other_node_on_axis(self, below: bool, vertical: bool, right: bool) -> Union[Edge, None]:
+        for edge in self.edges:
+            if (
+                # must be straight edge on axis
+                not isinstance(edge, DiagonalEdge) and
+                edge.edge_matches_axis(self, vertical, include_other=True) and
+                (
+                    # conditions if trying to find a specific vertical edge
+                    (
+                        vertical and
+                        (
+                            (below and edge.get_other_node(self).row_idx < self.row_idx) or
+                            (not below and edge.get_other_node(self).row_idx > self.row_idx)
+                        )
+                    ) or
+                    # conditions if trying to find a specific horizontal edge
+                    (
+                        not vertical and
+                        (
+                            (right and edge.get_other_node(self).col_idx < self.col_idx) or
+                            (not right and edge.get_other_node(self).col_idx > self.col_idx)
+                        )
+                    )
+                )
+            ):
+                return edge
         return None
 
     @staticmethod

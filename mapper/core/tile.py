@@ -13,7 +13,7 @@ class Tile:
         self.col_idx: int = col_idx
         self.num_in_row: int = num_in_row
         self.num_display_rows: int = 9
-        self.display_width: int = 9
+        self.display_width: int = 13
         self.tile_type: Optional[TileType] = None
         self.label: Optional[str] = None
 
@@ -42,7 +42,10 @@ class Tile:
             # return empty space
             return self.__fill(
                 include_right,
-                middle_label=middle_label
+                leftmost=leftmost,
+                middle_label=middle_label,
+                left_vertical_label=left_vertical_label,
+                right_vertical_label=right_vertical_label
             )
         else:
             # return empty space
@@ -64,10 +67,16 @@ class Tile:
         """
         if middle_label is not None:
             dw = self.display_width - len(middle_label)
+            dw = dw + 1 if leftmost and left_vertical_label is not None else dw
             left_pad = int(dw / 2)
+            if left_vertical_label is None:
+                left_chars = "|" + (" " * left_pad)
+            else:
+                new_left_pad = left_pad - len(left_vertical_label)
+                left_chars = left_vertical_label + (" " * new_left_pad)
             right_pad = dw - left_pad
-            right_char = '' if not include_right else '|'
-            return f'|{" " * left_pad}{middle_label}{" " * right_pad}{right_char}'
+            right_char = '' if not include_right else ('|' if right_vertical_label is None else right_vertical_label)
+            return f'{left_chars}{middle_label}{" " * right_pad}{right_char}'
         else:
             left_characters = '|' if left_vertical_label is None else left_vertical_label
             if left_vertical_label is None:
