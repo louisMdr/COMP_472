@@ -3,7 +3,9 @@
 ### Requirements
 
 Python 3.7.x.
+
 With no particular libraries required. 
+
 ie: Program uses its own built-in functions for map display 
     and priority-queue. 
 
@@ -11,7 +13,7 @@ ie: Program uses its own built-in functions for map display
 
 1- Install Python and libraries
 2- Change working directory to project directory
-3- Type "python main.py"
+3- Type "python driver.py"
 
 ### Running the program 
 
