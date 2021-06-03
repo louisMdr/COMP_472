@@ -47,7 +47,7 @@ class Map:
         return self._node_grid[row_idx][col_idx]
 
     def max_x(self):
-        return self.num_columns * self.TILE_WIDTH
+        return self.num_rows * self.TILE_WIDTH
 
     def max_y(self):
         return self.num_columns * self.TILE_WIDTH
