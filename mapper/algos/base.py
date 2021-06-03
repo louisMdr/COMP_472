@@ -16,3 +16,11 @@ class HeuristicAStar:
     def search(self):
         # each role needs to implement a different search algorithm
         ...
+
+
+class InfoContainer:
+    """ Helper data class for search """
+    def __init__(self, node: Node, path_to: list, cost: int = 0):
+        self.node: Node = node
+        self.path: list = path_to
+        self.cost: int = cost

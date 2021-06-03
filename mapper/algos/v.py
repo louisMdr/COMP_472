@@ -10,7 +10,7 @@ from mapper.core.node import Node
 from mapper.core.edge import Edge, DiagonalEdge
 from mapper.core.tile import Tile, Quarantine, Vaccine, PlayGround
 from mapper.core.pqueue import PriorityQueue
-from mapper.algos.base import HeuristicAStar
+from mapper.algos.base import HeuristicAStar, InfoContainer
 
 
 class RoleVAlgo(HeuristicAStar):
@@ -152,12 +152,4 @@ class RoleVAlgo(HeuristicAStar):
 
     def __calculate_h(self, node: Node) -> float:
         return self.d_map[node.get_name()]
-
-
-class InfoContainer:
-    """ Helper data class for search """
-    def __init__(self, node: Node, path_to: list, cost: int = 0):
-        self.node: Node = node
-        self.path: list = path_to
-        self.cost: int = cost
 

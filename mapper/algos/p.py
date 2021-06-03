@@ -5,7 +5,7 @@ from mapper.core.node import Node
 from mapper.core.edge import Edge, DiagonalEdge
 from mapper.core.tile import Tile, Quarantine, Vaccine, PlayGround
 from mapper.core.pqueue import PriorityQueue
-from mapper.algos.base import HeuristicAStar
+from mapper.algos.base import HeuristicAStar, InfoContainer
 
 
 class RolePAlgo(HeuristicAStar):
@@ -19,27 +19,6 @@ class RolePAlgo(HeuristicAStar):
         self.queue: PriorityQueue = PriorityQueue()
         self.d_map: Dict[str, int] = {}
         self.__create_d_map()
-
-    def __update_start(self):
-        if isinstance(self.start_node.col_idx, float) and isinstance(self.start_node.row_idx, float):
-
-            print('START node is inside a grid')
-            if (self.start_node.col_idx - int(self.start_node.col_idx )) <0.5:
-                horiz_move = "left"
-            else:
-                horiz_move = "right"
-            if (self.start_node.row_idx - int(self.start_node.row_idx)) <0.5:
-                vert_move = "up"
-            else:
-                vert_move = "down"
-
-          #  print('\nMoving ' + horiz_move + ' to x coordinate: ' + (int(self.start_node.col_idx) + 1)
-          #       + ' at a cost of: ' + )
-          #  print('\nMoving ' + vert_move + ' to y coordinate: ' + int(self.start_node.row_idx))
-          #       + ' at a cost of: ' + )
-            new_row_idx = int(self.start_node.row_idx)
-            new_col_idx = int(self.start_node.col_idx) + 1
-            self.start_node = self.map.get_node(new_row_idx, new_col_idx)
 
     def __create_d_map(self):
         """ creates distance to goal for each node """
@@ -125,12 +104,4 @@ class RolePAlgo(HeuristicAStar):
             print('No path found: Search path stuck in an infinite path cost. Terminating program.')
             exit()
         return min_cost - 1 + self.d_map[node.get_name()]
-
-
-class InfoContainer:
-    """ Helper data class for search """
-    def __init__(self, node: Node, path_to: list, cost: int = 0):
-        self.node: Node = node
-        self.path: list = path_to
-        self.cost: int = cost
 
