@@ -192,6 +192,7 @@ class Driver:
         while True:
             choice = self.__main_menu()
             if choice == 7:
+                print('\nThank you for playing. Stay safe!')
                 break
             elif choice == 1:
                 self.__create_map()
