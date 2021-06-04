@@ -13,6 +13,11 @@ class RolePAlgo(HeuristicAStar):
 
     Implement A* heuristic search for Role P
 
+    H(N) = min(of all edge costs) - 1 + (moves in x direction + moves in y direction to closest goal node)
+    Reasoning: we cannot do an average of the costs since one edge or more could hold an infinite cost value,
+               but in order to make the heuristic informed, for each node, we still consider its best edge.
+               That way, a node that connects to edges of values (1.5, 2.5, 3) will be preferred, over an edge that
+               connects to edges of values (2, 2, 2.5). We then substract 1 and add  # moves (on x, y) away from goal
     """
     def __init__(self, cov_map: Map):
         super().__init__(cov_map)
