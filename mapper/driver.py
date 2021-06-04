@@ -58,7 +58,7 @@ class Driver:
         print(f'   V - Vaccine         {v}\n')
 
     def __main_menu(self) -> int:
-        print(' Main menu:')
+        print('\n Main menu:')
         print('   1 - New map')
         print('   2 - Edit tiles')
         print('   3 - Choose role')
