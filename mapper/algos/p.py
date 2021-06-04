@@ -19,6 +19,7 @@ class RolePAlgo(HeuristicAStar):
                That way, a node that connects to edges of values (1.5, 2.5, 3) will be preferred, over an edge that
                connects to edges of values (2, 2, 2.5). We then substract 1 and add  # moves (on x, y) away from goal
     """
+
     def __init__(self, cov_map: Map):
         super().__init__(cov_map)
         self.queue: PriorityQueue = PriorityQueue()
