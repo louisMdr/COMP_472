@@ -21,6 +21,9 @@ class RolePAlgo(HeuristicAStar):
         self.__create_d_map()
         self.middle_label: Optional[str] = None
 
+    def accepted_tile_type(self):
+        return PlayGround
+
     def __create_d_map(self):
         """ creates distance to goal for each node """
         goal_map = {}
@@ -98,6 +101,7 @@ class RolePAlgo(HeuristicAStar):
                     InfoContainer(other_node, node_info.path + add_next, node_info.cost + cur_cost)
                 )
 
+        self.__create_d_map()
         self.queue.queue(0, InfoContainer(self.start_node, []))
         success_info = None
         closed_list = []
@@ -117,7 +121,6 @@ class RolePAlgo(HeuristicAStar):
                 # regular nodes go once (including start node not inside the tile)
                 vertical = False
                 search_helper()
-
 
         if success_info is None:
             print('\n NO PATH FOUND')

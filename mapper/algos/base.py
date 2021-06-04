@@ -17,6 +17,9 @@ class HeuristicAStar:
         # each role needs to implement a different search algorithm
         ...
 
+    def accepted_tile_type(self):
+        ...
+
 
 class InfoContainer:
     """ Helper data class for search """

@@ -1,4 +1,4 @@
-from typing import Dict, List, Union, Tuple
+from typing import Dict, List, Union, Tuple, Type
 
 from mapper.core.node import Node
 from mapper.core.tile import Tile, TileTypeFactory
@@ -17,7 +17,7 @@ class Map:
         self.num_columns: int = num_columns
         self.num_rows: int = num_rows
         # 2D map grid, with just the squares
-        self.map_grid: list = [[Tile(i, j, num_columns) for j in range(num_columns)] for i in range(num_rows)]
+        self.map_grid: List[List[Tile]] = [[Tile(i, j, num_columns) for j in range(num_columns)] for i in range(num_rows)]
         # keep track of nodes in a map for easy lookup
         self._node_lookup: Dict[str, Node] = {}
         # keep track of edges to not duplicate
@@ -34,8 +34,27 @@ class Map:
         ]
         # the graph, starting from the top-left node
         self.graph: Node = self._node_grid[0][0]
+        self.counts = {
+            'V': 0,
+            'P': 0,
+            'Q': 0,
+            'U': self.num_rows * self.num_columns
+        }
         # connect all the nodes
         self.__connect()
+
+    def get_counts(self) -> Tuple[int, int, int, int]:
+        return self.counts['V'], self.counts['P'], self.counts['Q'], self.counts['U']
+
+    def valid_map_for_role(self, tile_type: Type) -> bool:
+        for row in self.map_grid:
+            for tile in row:
+                if isinstance(tile.tile_type, tile_type):
+                    return True
+        return False
+
+    def has_start(self) -> bool:
+        return 'START' in self._node_lookup.keys()
 
     def lookup_node(self, name: str) -> Node:
         the_node = self._node_lookup.get(name)
@@ -232,6 +251,10 @@ class Map:
         Changes the tile type of the given index
         """
         row_index, col_index = self.__translate_index(tile_index)
+        existing_type = self.map_grid[row_index][col_index].tile_type
+        existing_type_key = 'U' if existing_type is None else existing_type.__class__.__name__[0]
+        self.counts[existing_type_key] -= 1
+        self.counts[tile_type.upper()] += 1
         self.map_grid[row_index][col_index].set_type(TileTypeFactory.create_type(tile_type))
 
     def validate_index(self, tile_index: int) -> bool:

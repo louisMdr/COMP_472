@@ -22,6 +22,9 @@ class RoleCAlgo(HeuristicAStar):
         self.d_map: Dict[str, int] = {}
         self.__create_d_map()
 
+    def accepted_tile_type(self):
+        return Quarantine
+
     def __update_start(self):
         # make sure to always start on the top right if the start point is inside a tile somewhere
         if isinstance(self.start_node.col_idx, float) and isinstance(self.start_node.row_idx, float):
@@ -47,6 +50,7 @@ class RoleCAlgo(HeuristicAStar):
                 self.d_map[node.get_name()] = min(distances)
 
     def search(self):
+        self.__create_d_map()
         self.queue.queue(0, InfoContainer(self.start_node, []))
         success_info = None
         closed_list = []

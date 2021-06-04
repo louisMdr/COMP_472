@@ -121,7 +121,7 @@ class TileTypeFactory:
     """
     @staticmethod
     def validate(tile_type: str) -> bool:
-        if tile_type.upper() in ['V', 'Q', 'P']:
+        if tile_type.upper() in ['V', 'Q', 'P', 'U']:
             return True
         else:
             return False
@@ -134,6 +134,8 @@ class TileTypeFactory:
             class_name = Quarantine
         elif tile_type.upper() == 'P':
             class_name = PlayGround
+        elif tile_type.upper() == 'U':
+            return None
         else:
             raise RuntimeError('Invalid TileType')
         return class_name()
