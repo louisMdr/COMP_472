@@ -2,7 +2,7 @@
 # Assignment 1
 # Written by:
 #   Paul 
-#   Louis 
+#   Louis Madre (40087452) 
 #   Davy Riviere (29379355) 
 # For COMP 472 Section AA – Summer 2021
 # --------------------------------------------------------
