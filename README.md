@@ -2,12 +2,8 @@
 
 ### Requirements
 
-Python 3.7.x.
-
-With no particular libraries required. 
-
-ie: Program uses its own built-in functions for map display 
-    and priority-queue. 
+python==3.8.10
+numpy==1.20.3
 
 ### How to Use 
 
