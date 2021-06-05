@@ -1,6 +1,7 @@
 from mapper.core.map import Map
 from mapper.algos.c import RoleCAlgo
 from mapper.algos.p import RolePAlgo
+from mapper.algos.v import RoleVAlgo
 from mapper.algos.base import HeuristicAStar
 
 
