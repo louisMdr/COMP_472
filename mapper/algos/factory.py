@@ -1,6 +1,7 @@
 from mapper.core.map import Map
 from mapper.algos.c import RoleCAlgo
 from mapper.algos.p import RolePAlgo
+from mapper.algos.v import RoleVAlgo
 from mapper.algos.base import HeuristicAStar
 
 
@@ -13,10 +14,9 @@ class RoleAlgoFactory:
         if role_char == 'C':
             return RoleCAlgo(self.map)
         elif role_char == 'P':
-            # TODO import and instantiate Role P specific algo
             return RolePAlgo(self.map)
         elif role_char == 'V':
             # TODO import and instantiate Role V specific algo
-            return HeuristicAStar(self.map)
+            return RoleVAlgo(self.map)
         else:
             raise RuntimeError(f'No algorithm defined for role {role_char}')
