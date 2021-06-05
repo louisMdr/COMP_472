@@ -1,3 +1,4 @@
+from math import ceil, floor
 from typing import Dict
 
 from mapper.core.map import Map
@@ -18,6 +19,7 @@ class RoleCAlgo(HeuristicAStar):
     """
     def __init__(self, cov_map: Map):
         super().__init__(cov_map)
+        self.__update_start()
         self.queue: PriorityQueue = PriorityQueue()
         self.d_map: Dict[str, int] = {}
         self.__create_d_map()
@@ -28,8 +30,8 @@ class RoleCAlgo(HeuristicAStar):
     def __update_start(self):
         # make sure to always start on the top right if the start point is inside a tile somewhere
         if isinstance(self.start_node.col_idx, float) and isinstance(self.start_node.row_idx, float):
-            new_row_idx = int(self.start_node.row_idx)
-            new_col_idx = int(self.start_node.col_idx) + 1
+            new_row_idx = floor(self.start_node.row_idx)
+            new_col_idx = ceil(self.start_node.col_idx)
             self.start_node = self.map.get_node(new_row_idx, new_col_idx)
 
     def __create_d_map(self):
