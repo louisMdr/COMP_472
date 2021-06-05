@@ -270,8 +270,8 @@ class RolePAlgo(HeuristicAStar):
     #            adjacent node. So a favourable mix, is an adjacent node that connects to an edge with a low cost,
     #            AND also has few # moves left (on x and y) to reach the goal-state. That way, when choosing between
     #            an adjacent node that connects to edges of values: 1.5, 2.5, 3... and one that connects to edges of
-    #            values: 2, 2, 2.5... with let's say, the same # of moves left on the x & y axis to reach the goal node,
-    #            we will take the first one because at best it will go down an edge that is less cost than the latter.
+    #            values: 2, 2, 2.5... with (i.e.) the same # of moves left on the x & y axis to reach the goal node,
+    #            we will take the first one because at best it will go down an edge that is less costly than the latter.
     #            Note: we subtract one, because when counting the # of moves left, actually, we already counted one of
     #            them, and replaced that count by the best possible edge_cost value for that move...
     def __calculate_h(self, node: Node, current_cost: float, vertical: bool) -> float:
