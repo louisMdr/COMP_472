@@ -272,8 +272,8 @@ class RolePAlgo(HeuristicAStar):
     #            an adjacent node that connects to edges of values: 1.5, 2.5, 3... and one that connects to edges of
     #            values: 2, 2, 2.5... with (i.e.) the same # of moves left on the x & y axis to reach the goal node,
     #            we will take the first one because at best it will go down an edge that is less costly than the latter.
-    #            Note: we subtract one, because when counting the # of moves left, actually, we already counted one of
-    #            them, and replaced that count by the best possible edge_cost value for that move...
+    #            Note: we subtract one, because when counting the # of moves left, there is one move which we already
+    #            counted: the move for which we used the lowest possible edge_cost value...
     def __calculate_h(self, node: Node, current_cost: float, vertical: bool) -> float:
         min_cost = min([self.__edge_cost(edge, current_cost, node, vertical) for edge in node.edges])
         return min_cost - 1 + self.d_map[node.get_name()]
