@@ -17,7 +17,7 @@ numpy==1.20.3
 ### Running the program 
 
 1. First the user creates a grid by entering an integer for both
-   the number of rows and number of columnsn.
+   the number of rows and number of columns.
 
 2. After the grid is displayed, the user may then select a type
    for various tiles in the grid, by first entering the tile 
