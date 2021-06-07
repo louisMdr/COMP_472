@@ -118,6 +118,7 @@ class RoleVAlgo(HeuristicAStar):
             #finding the common nodes and calculating their cost with respect to the outer edges of the diagonal
             for edge_1 in node_1_edges:
               for edge_2 in node_2_edges:
+              #identifying the nodes that are present in both edges (the 2 edges responsible for the diagonal's cost)
                 if edge_1.node_one.name == edge_2.node_one.name or edge_1.node_one.name == edge_2.node_two.name or edge_2.node_one.name ==  edge_1.node_two.name or edge_2.node_two.name == edge_1.node_two.name:
                   result = (self.__edge_cost(edge_1) ** 2 + self.__edge_cost(edge_2) ** 2) ** 0.5
                   edge_lst.append(result)
