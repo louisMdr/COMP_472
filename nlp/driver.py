@@ -1,5 +1,6 @@
 from nlp.scraping.api import ImdbApi
 from nlp.scraping.review_parser import ReviewParser
+from nlp.pipeline.dataset import DataSet
 
 
 def main():
@@ -7,6 +8,9 @@ def main():
     parser.scrape()
     # print('\n\n\nCSV OUTPUT::\n\n')
     print(parser.episodes.to_csv())
+    dataset = DataSet(parser.reviews)
+    X, y = dataset.train_test_split()
+    print('finished')
 
 
 if __name__ == '__main__':
