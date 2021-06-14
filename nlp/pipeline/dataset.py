@@ -1,5 +1,7 @@
+import re
 import html
 import random
+import string
 from typing import List, Optional, Tuple
 
 from nlp.scraping.data import Review
@@ -28,9 +30,33 @@ class DataSet:
         self.__clean()
 
     def __clean(self):
+        translator = str.maketrans('', '', string.punctuation)
+        emoji_pattern = re.compile(
+            "["
+            u"\U0001F600-\U0001F64F"  # emoticons
+            u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+            u"\U0001F680-\U0001F6FF"  # transport & map symbols
+            u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+            u"\U00002500-\U00002BEF"  # chinese char
+            u"\U00002702-\U000027B0"
+            u"\U00002702-\U000027B0"
+            u"\U000024C2-\U0001F251"
+            u"\U0001f926-\U0001f937"
+            u"\U00010000-\U0010ffff"
+            u"\u2640-\u2642" 
+            u"\u2600-\u2B55"
+            u"\u200d"
+            u"\u23cf"
+            u"\u23e9"
+            u"\u231a"
+            u"\ufe0f"  # dingbats
+            u"\u3030"
+            "]+", re.UNICODE
+        )
+
         for review in self.raw_data:
             review.contents = html.unescape(review.contents)
-            review.contents = review.contents.lower()
+            review.contents = re.sub(emoji_pattern, '', review.contents.lower().translate(translator))
 
     def set_raw_data(self, data: List[Review]):
         self.__set(data)

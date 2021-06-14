@@ -77,6 +77,7 @@ class ReviewParser:
                         continue
                     review_rating = float(rating.find_next('span').text)
                     review_content = review.find('div', attrs={'class': 'content'}).find('div', attrs={'class': 'text show-more__control'}).text
-                    self.reviews.append(Review(episode_id, review_rating, review_content))
+                    review_id = review.attrs['data-review-id']
+                    self.reviews.append(Review(episode_id, review_rating, review_content, review_id))
                     ep_rev_counter += 1
                 print(f'      Scraped episode {ep_num}: \'{episode_name}\' with {ep_rev_counter} reviews')

@@ -74,8 +74,10 @@ class Review:
     rating: float
     contents: str
     episode_id: str
+    review_id: str
 
-    def __init__(self, episode_id: str, rating: float, contents: str):
+    def __init__(self, episode_id: str, rating: float, contents: str, review_id: str):
         self.episode_id = episode_id
         self.rating = rating
         self.contents = contents
+        self.review_id = review_id
