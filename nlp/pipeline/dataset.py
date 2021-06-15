@@ -30,7 +30,7 @@ class DataSet:
         self.__clean()
 
     def __clean(self):
-        translator = str.maketrans('', '', string.punctuation)
+        # translator = str.maketrans('', '', string.punctuation)
         emoji_pattern = re.compile(
             "["
             u"\U0001F600-\U0001F64F"  # emoticons
@@ -56,7 +56,10 @@ class DataSet:
 
         for review in self.raw_data:
             review.contents = html.unescape(review.contents)
-            review.contents = re.sub(emoji_pattern, '', review.contents.lower().translate(translator))
+            new_contents = re.sub(emoji_pattern, '', review.contents.lower().replace("'", ''))
+            for punct in string.punctuation:
+                new_contents = new_contents.replace(punct, ' ')
+            review.contents = new_contents
 
     def set_raw_data(self, data: List[Review]):
         self.__set(data)

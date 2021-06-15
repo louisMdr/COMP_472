@@ -23,8 +23,7 @@ class NaiveBayesClassifier:
     stopwords: List[str]
     count_positive_words: Optional[int]
     count_negative_words: Optional[int]
-    num_negative_words: Optional[int]
-    num_positive_words: Optional[int]
+    vocab_length: Optional[int]
 
     def __init__(self, threshold: float = None, training_data: List[Review] = None, delta: float = None):
         self.threshold = threshold
@@ -35,8 +34,7 @@ class NaiveBayesClassifier:
         self.positive_document_prob = None
         self.count_positive_words = None
         self.count_negative_words = None
-        self.num_negative_words = None
-        self.num_positive_words = None
+        self.vocab_length = None
         self.__load_stopwords()
         if training_data is not None:
             self.prepare(training_data)
@@ -62,7 +60,7 @@ class NaiveBayesClassifier:
                 for word in re.split(r'\s+', review.contents)
                 # if not with_rating -> in prediction mode, so always include words
                 # if word not in self.stopwords -> in training mode, so only include non-stopwords
-                if not with_rating or word not in self.stopwords
+                if word != '' and (not with_rating or word not in self.stopwords)
             ])
         return for_pandas
 
@@ -90,8 +88,6 @@ class NaiveBayesClassifier:
         # calculate denominators
         self.count_positive_words = len(self.training_data[self.training_data.positive == 1]['word'])
         self.count_negative_words = len(self.training_data[self.training_data.negative == 1]['word'])
-        self.num_positive_words = len(self.training_data[self.training_data.positive == 1]['word'].unique())
-        self.num_negative_words = len(self.training_data[self.training_data.negative == 1]['word'].unique())
         num_positive_revs = len(self.training_data[self.training_data.positive == 1]['review_id'].unique())
         num_negative_revs = len(self.training_data[self.training_data.negative == 1]['review_id'].unique())
         # perform grouping to get counts in each category and merge back together
@@ -103,38 +99,42 @@ class NaiveBayesClassifier:
             on='word',
             how='outer'
         ).fillna(0)
+        self.vocab_length = len(self.probabilities['word'].unique())
         # calculate conditional probabilities for words
         # add smoothing with delta
-        self.probabilities['cond_positive'] = (self.probabilities['positive_count'] + self.delta) / (self.count_positive_words + (self.delta * self.num_positive_words))
-        self.probabilities['cond_negative'] = (self.probabilities['negative_count'] + self.delta) / (self.count_negative_words + (self.delta * self.num_negative_words))
+        self.probabilities['cond_positive'] = (self.probabilities['positive_count'] + self.delta) / (self.count_positive_words + (self.delta * self.vocab_length))
+        self.probabilities['cond_negative'] = (self.probabilities['negative_count'] + self.delta) / (self.count_negative_words + (self.delta * self.vocab_length))
+
         # calculate document probabilities
         self.positive_document_prob = num_positive_revs / (num_negative_revs + num_positive_revs)
         self.negative_document_prob = num_negative_revs / (num_negative_revs + num_positive_revs)
 
     def predict(self, data: List[Review]) -> dict:
-        def inner_predict(df: pd.DataFrame, doc_prob: float, cond_key: str, count: int, vocab_length: int) -> float:
+        def single_predict(series: pd.Series, cond_key: str, count: int) -> float:
+            # check if the word is in the trained words
+            if series['word'] in self.probabilities['word'].to_list():
+                value = math.log(
+                    self.probabilities.loc[self.probabilities['word'] == series['word'], cond_key].values[0] *
+                    series['count']
+                )
+            else:
+                # return the log of the probability of an untrained word
+                value = math.log((self.delta * series['count']) / (count + (self.delta * self.vocab_length)))
+            return value
+
+        def inner_predict(df: pd.DataFrame, doc_prob: float, cond_key: str, count: int) -> float:
             return (
                 # probability of the document type
                 math.log(doc_prob) +
                 # calculate and sum probabilities of all words in the document
-                df.apply(
-                    lambda x: (
-                        # return the log of trained conditional probability
-                        math.log(self.probabilities.loc[self.probabilities['word'] == x['word'], cond_key].values[0])
-                        # check if the word is in the trained words
-                        if x['word'] in self.probabilities['word'] else
-                        # return the log of the probability of an untrained word
-                        math.log(self.delta / (count + (self.delta * vocab_length)))
-                    ),
-                    axis=1
-                ).sum()
+                df.apply(lambda x: single_predict(x, cond_key, count), axis=1).sum()
             )
 
         def predict_pos(df: pd.DataFrame) -> float:
-            return inner_predict(df, self.positive_document_prob, 'cond_positive', self.count_positive_words, self.num_positive_words)
+            return inner_predict(df, self.positive_document_prob, 'cond_positive', self.count_positive_words)
 
         def predict_neg(df: pd.DataFrame) -> float:
-            return inner_predict(df, self.negative_document_prob, 'cond_negative', self.count_negative_words, self.num_negative_words)
+            return inner_predict(df, self.negative_document_prob, 'cond_negative', self.count_negative_words)
 
         to_predict = pd.DataFrame(self.__prepare(data))
         to_predict['count'] = 1
@@ -163,10 +163,10 @@ class NaiveBayesClassifier:
         else:
             filename = os.path.join(path_to_file, 'model.txt')
         exported_data = []
-        for i, row in self.probabilities.iterrows():
+        for i, row in self.probabilities.sort_values(['positive_count', 'negative_count'], ascending=False).reset_index(drop=True).iterrows():
             exported_data.extend([
-                f'No.{i} {row["word"]}',
-                f'{row["positive_count"]},{row["cond_positive"]},{row["negative_count"]},{row["cond_negative"]}'
+                f'No.{i + 1} {row["word"]}',
+                f'{int(row["positive_count"])},{row["cond_positive"]},{int(row["negative_count"])},{row["cond_negative"]}'
             ])
         with open(filename, 'w', encoding='utf-8') as f:
             f.write('\n'.join(exported_data).encode('utf-8').decode('utf-8'))
@@ -195,7 +195,7 @@ class NaiveBayesClassifier:
             true_val = 'negative' if row.rating < self.threshold else 'positive'
             res = 'right' if true_val == pred['prediction'] else 'wrong'
             exported_data.extend([
-                f'No.{i} {row.review_id}',
+                f'No.{i + 1} {row.review_id}',
                 f'{pred["positive_prob"]},{pred["negative_prob"]},{pred["prediction"]},{true_val},{res}'
             ])
         with open(filename, 'w', encoding='utf-8') as f:

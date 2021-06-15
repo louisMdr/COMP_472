@@ -19,7 +19,10 @@ class Episode:
         self.episode_id = episode_id
         self.name = episode_name
         self.air_date = air_date
-        self.year = parser.parse(air_date).year.real
+        try:
+            self.year = parser.parse(air_date).year.real
+        except Exception as e:
+            self.year = -1
         self.review_url = None
 
 

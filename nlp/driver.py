@@ -5,7 +5,12 @@ from nlp.pipeline.bayes import NaiveBayesClassifier
 
 
 def main():
-    parser = ReviewParser(show_id='tt4158110')
+    # Keeping Up With The Kardashians   tt1086761
+    # Westworld   tt0475784
+    # Mr Robot tt4158110
+    # Game of Thrones tt0944947
+    # The Sopranos tt0141842
+    parser = ReviewParser(show_id='tt0944947')
     parser.scrape()
     # print('\n\n\nCSV OUTPUT::\n\n')
     parser.episodes.to_csv()
