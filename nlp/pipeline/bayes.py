@@ -41,7 +41,7 @@ class NaiveBayesClassifier:
 
     def __load_stopwords(self):
         dirname = os.path.dirname(__file__)
-        with open(os.path.join(dirname, 'stopwords.txt'), 'r') as f:
+        with open(os.path.join(dirname, 'stopwords.txt'), 'r') as f:   ### replace stopwords.txt with remove.txt
             self.stopwords = f.read().split('\n')
 
     def __prepare(self, data: List[Review], with_rating: bool = False) -> List[dict]:
@@ -171,7 +171,7 @@ class NaiveBayesClassifier:
         with open(filename, 'w', encoding='utf-8') as f:
             f.write('\n'.join(exported_data).encode('utf-8').decode('utf-8'))
 
-    def validate(self, preds: dict, data: List[Review]):
+    def validate(self, preds: dict, data: List[Review]): ###-> float   #for returning accuracy
         if not all([rev.review_id in preds.keys() for rev in data]):
             print('Missing some predictions... :(')
 
@@ -183,6 +183,7 @@ class NaiveBayesClassifier:
             )
         ]) / len(data)
         print(f'Accuracy: {accuracy}')
+        ### return accuracy #(useful for task2.2)
 
     def export_predictions(self, preds: dict, data: List[Review], path_to_file: str = None):
         if path_to_file is None:

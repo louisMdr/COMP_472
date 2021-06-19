@@ -26,7 +26,11 @@ class ImdbApi:
                 for k, v in params.items()
             ])
         self.current_page = f'{self._base}{"/".join(url_parts)}{param_str}'
-        self.current_response = requests.request(method, self.current_page)
+
+        headers = {'Connection': 'close',
+                   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36'}
+        self.current_response = requests.request(method, self.current_page, headers=headers)
+
         return self.current_response
 
     def get_title(self, title_id: str) -> requests.Response:
