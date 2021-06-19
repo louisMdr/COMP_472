@@ -36,8 +36,13 @@ def run():
         else:
             # nbc.export_training_data()        #### may not be necessary
             preds = nbc.predict(y)                   # dr
+<<<<<<< HEAD
             acc = nbc.validate(preds, y)        #### store the accuracy in variable acc (which we will later append)
                                                 # (However for that we need function validate to return the accuracy)
+=======
+            acc = nbc.calculate_accuracy(preds, y)        #### store the accuracy in variable acc (which we will later append)
+                                                # (However for that we need function validate to return the accuracy!!)
+>>>>>>> 1fa52431926772d7de527fdb765f13360e2abe10
             # nbc.export_predictions(preds, y)  #### may not be necessary
 
         accuracy_values.append(acc)                  # append the accuracies to accuracy_values (list of accuracies)
