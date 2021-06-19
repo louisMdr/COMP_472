@@ -2,7 +2,7 @@
 # Assignment 2
 # Written by:
 #   Paul Piggott (27519451)
-#   Louis Madre (40087452)
+#   Louis Madre  (40087452)
 #   Davy Riviere (29379355)
 # For COMP 472 Section AA – Summer 2021
 # --------------------------------------------------------
