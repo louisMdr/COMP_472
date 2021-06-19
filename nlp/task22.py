@@ -12,7 +12,7 @@ def run():
     #parser = ReviewParser(show_id='tt4158110')  # same as driver.py -------------------------------------------------
     #parser.scrape()                                # essentially we are running driver.py with different delta values
     #parser.episodes.to_csv()                       # and extracting the accuracy for each
-    #dataset = DataSet(parser.reviews)              # Actually I may not need lines 11-15 if I run main()
+    #dataset = DataSet(parser.reviews)              # Actually I may not need lines 11-16 if I run main()
     #X, y = dataset.train_test_split()           # -------------------------------------------------------------------
     X, y = driver.task22_X, driver.task22_y
     for each in delta_values:                        # so now we run NB classifier multiple times,
@@ -27,7 +27,7 @@ def run():
 
             preds = nbc.predict(y)                   # dr
             acc = nbc.validate(preds, y)        #### store the accuracy in variable acc (which we will later append)
-                                                # (However for that we need func nbc.validate to return the accuracy!!)
+                                                # (However for that we need func nbc.validate to return the accuracy)
             nbc.export_predictions(preds, y, 'smooth-result.txt')  # We must export predictions to smooth-results.txt
 
                                       ## error - need to figure out how to save to smooth-result.txt
@@ -37,7 +37,7 @@ def run():
             # nbc.export_training_data()        #### may not be necessary
             preds = nbc.predict(y)                   # dr
             acc = nbc.validate(preds, y)        #### store the accuracy in variable acc (which we will later append)
-                                                # (However for that we need function validate to return the accuracy!!)
+                                                # (However for that we need function validate to return the accuracy)
             # nbc.export_predictions(preds, y)  #### may not be necessary
 
         accuracy_values.append(acc)                  # append the accuracies to accuracy_values (list of accuracies)
