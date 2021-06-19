@@ -56,27 +56,26 @@ if __name__ == '__main__':
             delta_values = [1.0, 1.2, 1.4, 1.6, 1.8, 2.0]  # list of the different delta values we will be testing
             accuracy_values = []  # list where the corresponding accuracy values of each delta will be stored
             for each in delta_values:  # for every delta we run our NB classifier (train - predict - get accuracy)
-                print(' >>   For DELTA =', each)
+                print('  For DELTA =', each)
                 nbc = NaiveBayesClassifier(training_data=task2_X, delta=each)
                 nbc.train()
                 if each == 1.6:
                     nbc.export_training_data(filename='smooth-model.txt')  # if delta = 1.6, we store our model
                     preds = nbc.predict(task2_y)
                     acc = nbc.calculate_accuracy(preds, task2_y)
-                    print('       Accuracy =', acc)
+                    print('    Accuracy:', acc)
                     nbc.export_predictions(preds, task2_y, filename='smooth-result.txt') # as well as our results
-                    print('    >> Files "smooth-model.txt" & "smooth-result.txt" for DELTA = 1.6 saved. ')
+                    print('    Saving files "smooth-model.txt" & "smooth-result.txt" for delta = 1.6')
                 else:
                     preds = nbc.predict(task2_y)
                     acc = nbc.calculate_accuracy(preds, task2_y)
-                    print('    Accuracy =', acc)
+                    print('    Accuracy:', acc)
                 accuracy_values.append(acc)  # append the new found accuracy to the list of accuracy_values
             print('\nTask 2.1 complete. Graph: \n\n')
             plt.plot(delta_values, accuracy_values)  # plotting the graph w values from delta_values & accuracy_values
             plt.xlabel('Delta')
             plt.ylabel('Accuracy')
             plt.show()
-
 
         elif user_input == '2.3':
             #   task23.run()
