@@ -157,11 +157,9 @@ class NaiveBayesClassifier:
             for name, pred in predictions.iteritems()
         }
 
-    def export_training_data(self, path_to_file: str = None):
-        if path_to_file is None:
-            filename = 'model.txt'
-        else:
-            filename = os.path.join(path_to_file, 'model.txt')
+    def export_training_data(self, path_to_file: str = None, filename: str = 'model.txt'):
+        if path_to_file is not None:
+            filename = os.path.join(path_to_file, filename)
         exported_data = []
         for i, row in self.probabilities.sort_values(['positive_count', 'negative_count'], ascending=False).reset_index(drop=True).iterrows():
             exported_data.extend([
@@ -172,23 +170,24 @@ class NaiveBayesClassifier:
             f.write('\n'.join(exported_data).encode('utf-8').decode('utf-8'))
 
     def validate(self, preds: dict, data: List[Review]):
+        accuracy = self.calculate_accuracy(preds, data)
+        print(f'Accuracy: {accuracy}')
+
+    def calculate_accuracy(self, preds: dict, data: List[Review]) -> float:
         if not all([rev.review_id in preds.keys() for rev in data]):
             print('Missing some predictions... :(')
 
-        accuracy = len([
+        return len([
             True for review in data
             if (
                 (preds[review.review_id]['prediction'] == 'positive' and review.rating >= self.threshold) or
                 (preds[review.review_id]['prediction'] == 'negative' and review.rating < self.threshold)
             )
         ]) / len(data)
-        print(f'Accuracy: {accuracy}')
 
-    def export_predictions(self, preds: dict, data: List[Review], path_to_file: str = None):
-        if path_to_file is None:
-            filename = 'result.txt'
-        else:
-            filename = os.path.join(path_to_file, 'result.txt')
+    def export_predictions(self, preds: dict, data: List[Review], path_to_file: str = None, filename: str = 'result.txt'):
+        if path_to_file is not None:
+            filename = os.path.join(path_to_file, filename)
         exported_data = []
         for i, row in enumerate(data):
             pred = preds[row.review_id]
