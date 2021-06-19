@@ -71,7 +71,7 @@ if __name__ == '__main__':
                     acc = nbc.calculate_accuracy(preds, task2_y)
                     print('    Accuracy:', acc)
                 accuracy_values.append(acc)  # append the new found accuracy to the list of accuracy_values
-            print('\nTask 2.1 complete. Graph: \n\n')
+            print('\nTask 2.2 complete. Graph: \n\n')
             plt.plot(delta_values, accuracy_values)  # plotting the graph w values from delta_values & accuracy_values
             plt.xlabel('Delta')
             plt.ylabel('Accuracy')
