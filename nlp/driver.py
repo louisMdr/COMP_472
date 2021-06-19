@@ -19,8 +19,8 @@ def main():
     parser.episodes.to_csv()
     dataset = DataSet(parser.reviews)
     X, y = dataset.train_test_split()
-    task22_X = X
-    task22_y = y
+    task22_X = X  # storing X, y which are local to main() into task22_X, y
+    task22_y = y  # so we can refer back to them in task22.py
     nbc = NaiveBayesClassifier(training_data=X)
     nbc.train()
     nbc.export_training_data()
