@@ -41,7 +41,7 @@ class NaiveBayesClassifier:
 
     def __load_stopwords(self):
         dirname = os.path.dirname(__file__)
-        with open(os.path.join(dirname, 'stopwords.txt'), 'r') as f:   ### replace stopwords.txt with remove.txt
+        with open(os.path.join(dirname, 'remove.txt'), 'r') as f:
             self.stopwords = f.read().split('\n')
 
     def __prepare(self, data: List[Review], with_rating: bool = False) -> List[dict]:
