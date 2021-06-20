@@ -39,8 +39,8 @@ def main():
     dataset = DataSet(parser.reviews)
     X, y = dataset.train_test_split()
     print()
-    task2_X = X.copy()  # storing X, y which are local to main() into task22_X, y
-    task2_y = y.copy()  # so we can refer back to them in
+    task2_X = X.copy()  # making copies of X, y which are local to main() into task2_X, y
+    task2_y = y.copy()  # so we can refer back to them later, outside of driver.py
     nbc = NaiveBayesClassifier(training_data=X)
     nbc.train()
     nbc.export_training_data()
