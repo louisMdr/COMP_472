@@ -81,8 +81,9 @@ class WordLengthIterator:
         #the amount of words removed
         keys = ["=0", "<=2", "<=4", ">=9"]
         # performance (accuracy here) against nbr words left ( = word lengths removed)
-        plt.plot([f'{keys[i]}: {word_count_results[i]}' for i in len(word_count_results)], [i for i in accuracy_results])
+        plt.plot([f'{key}: {val}' for (key, val) in zip(keys, word_count_results)], [i for i in accuracy_results])
         plt.title('Naives Bayes Classification with Word Length (2.3)')
         plt.ylabel('Accuracy')
         plt.xlabel('Words Left In Vocab')
         plt.show()
+
