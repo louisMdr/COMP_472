@@ -61,7 +61,7 @@ class FrequencyIterator:
             fc.export_predictions(preds, self.y, filename=f'frequency-result_{i + 1}.txt')
             print(f'    Accuracy: {res}')
             results.append((i + 1, fc.training_data.shape[0], res))
-        print('\nTask 2.1 complete. Graph: \n\n')
+        print('\nTask 2.1 complete. Graph: \n')
         plt.plot([i[0] for i in results], [i[2] for i in results])
         plt.title('Naives Bayes Classification with Frequency (2.1)')
         plt.ylabel('Accuracy')

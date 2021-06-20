@@ -51,7 +51,7 @@ if __name__ == '__main__':
     main()
     print('\nTask 1 complete. Files saved for: remove.txt, model.txt and result.txt.\n')
 
-    print('\nRunning Task 2:\n')
+    print('Running Task 2:\n')
     user_input = ''
     while user_input != '##':
         user_input = input('Which task would you like to run?\nEnter 2.1, 2.2, 2.3, or ## to exit: ')
@@ -80,7 +80,7 @@ if __name__ == '__main__':
                     acc = nbc.calculate_accuracy(preds, task2_y)
                     print('    Accuracy:', acc)
                 accuracy_values.append(acc)  # append the new found accuracy to the list of accuracy_values
-            print('\nTask 2.2 complete. Graph: \n\n')
+            print('\nTask 2.2 complete. Graph: \n')
             plt.plot(delta_values, accuracy_values)  # plotting the graph w values from delta_values & accuracy_values
             plt.xlabel('Delta')
             plt.ylabel('Accuracy')
