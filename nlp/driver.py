@@ -59,19 +59,19 @@ if __name__ == '__main__':
     while user_input != '##':
         user_input = input('Which task would you like to run?\nEnter 2.1, 2.2, 2.3, or ## to exit: ')
         if user_input == '2.1':
-            # generates an object that trains the model for 7 iterations (the different word-length values)
+            # generate an object that trains the model for 7 iterations (for the different word frequencies)
             frq = FrequencyIterator(task2_X, task2_y)
-            # performs the iterations
+            # perform the iterations
             frq.iterate()
         elif user_input == '2.2':
-            # generates an object that trains the model for 6 iterations (the different delta values)
+            # generate an object that trains the model for 6 iterations (for the different delta values)
             dn = DeltaIterator(task2_X, task2_y)
-            # performs the iterations
+            # perform the iterations
             dn.iterate()
         elif user_input == '2.3':
-            # generates an object that trains the model for 3 iterations (the different word lengths)
+            # generate an object that trains the model for 3 iterations (for the different word lengths)
             wrdln = WordLengthIterator(task2_X, task2_y)
-            # performs the iterations
+            # perform the iterations
             wrdln.iterate()
         elif user_input == '##':
             break
