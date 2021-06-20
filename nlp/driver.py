@@ -12,6 +12,7 @@ from nlp.scraping.review_parser import ReviewParser
 from nlp.pipeline.dataset import DataSet
 from nlp.pipeline.bayes import NaiveBayesClassifier
 from nlp.pipeline.frequency import FrequencyIterator
+from nlp.pipeline.delta import DeltaIterator
 from nlp.pipeline.word_length import WordLengthIterator
 
 import matplotlib.pyplot as plt
@@ -58,42 +59,21 @@ if __name__ == '__main__':
     while user_input != '##':
         user_input = input('Which task would you like to run?\nEnter 2.1, 2.2, 2.3, or ## to exit: ')
         if user_input == '2.1':
+            # generates an object that trains the model for 7 iterations (the different word-length values)
             frq = FrequencyIterator(task2_X, task2_y)
+            # performs the iterations
             frq.iterate()
-
         elif user_input == '2.2':
-
-            print('\nStarting Task 2.2 - Word Smoothing Filtering...\n')
-            delta_values = [1.0, 1.2, 1.4, 1.6, 1.8, 2.0]  # list of the different delta values we will be testing
-            accuracy_values = []  # list where the corresponding accuracy values of each delta will be stored
-            for each in delta_values:  # for every delta we run our NB classifier (train - predict - get accuracy)
-                print('  For DELTA =', each)
-                nbc = NaiveBayesClassifier(training_data=task2_X, delta=each)
-                nbc.train()
-                if each == 1.6:
-                    nbc.export_training_data(filename='smooth-model.txt')  # if delta = 1.6, we store our model
-                    preds = nbc.predict(task2_y)
-                    acc = nbc.calculate_accuracy(preds, task2_y)
-                    print('    Accuracy:', acc)
-                    nbc.export_predictions(preds, task2_y, filename='smooth-result.txt') # as well as our results
-                    print('    Saving files "smooth-model.txt" & "smooth-result.txt" for delta = 1.6')
-                else:
-                    preds = nbc.predict(task2_y)
-                    acc = nbc.calculate_accuracy(preds, task2_y)
-                    print('    Accuracy:', acc)
-                accuracy_values.append(acc)  # append the new found accuracy to the list of accuracy_values
-            print('\nTask 2.2 complete. Graph: \n')
-            plt.plot(delta_values, accuracy_values)  # plotting the graph w values from delta_values & accuracy_values
-            plt.xlabel('Delta')
-            plt.ylabel('Accuracy')
-            plt.show()
-
+            # generates an object that trains the model for 6 iterations (the different delta values)
+            dn = DeltaIterator(task2_X, task2_y)
+            # performs the iterations
+            dn.iterate()
         elif user_input == '2.3':
-            #generates an object that trains the model for 3 iterations (the different word lengths)
+            # generates an object that trains the model for 3 iterations (the different word lengths)
             wrdln = WordLengthIterator(task2_X, task2_y)
-            #performs the iterations
+            # performs the iterations
             wrdln.iterate()
-            
+
         elif user_input == '##':
             break
         else:
