@@ -27,6 +27,7 @@ class DeltaIterator:
     X: List[Review]
     y: List[Review]
 
+    # 2 attributes; training set and testing set
     def __init__(self, X: List[Review], y: List[Review]):
         self.X = X
         self.y = y
