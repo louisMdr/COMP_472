@@ -12,6 +12,8 @@ from nlp.scraping.review_parser import ReviewParser
 from nlp.pipeline.dataset import DataSet
 from nlp.pipeline.bayes import NaiveBayesClassifier
 from nlp.pipeline.frequency import FrequencyIterator
+from nlp.pipeline.word_length import WordLengthIterator
+
 import matplotlib.pyplot as plt
 
 task2_X = None
@@ -87,8 +89,11 @@ if __name__ == '__main__':
             plt.show()
 
         elif user_input == '2.3':
-            #   task23.run()
-            print('\nrunning 2.3\n')
+            #generates an object that trains the model for 3 iterations (the different word lengths)
+            wrdln = WordLengthIterator(task2_X, task2_y)
+            #performs the iterations
+            wrdln.iterate()
+            
         elif user_input == '##':
             break
         else:
