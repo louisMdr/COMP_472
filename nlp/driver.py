@@ -69,7 +69,7 @@ if __name__ == '__main__':
             # perform the iterations
             dn.iterate()
         elif user_input == '2.3':
-            # generate an object that trains the model on 3 iterations (using different word lengths)
+            # generate an object that trains the model on 4 iterations (using different word lengths)
             wrdln = WordLengthIterator(task2_X, task2_y)
             # perform the iterations
             wrdln.iterate()
