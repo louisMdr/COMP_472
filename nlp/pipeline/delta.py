@@ -45,7 +45,7 @@ class DeltaIterator:
             print(f'  DELTA = {element}')
             # train the data (calculate the probabilities) using this delta
             dc.train(training_data=self.X, delta=element)
-            # if delta = 1.6, we store our model and our results in separate files
+            # if delta = 1.6, we store our model and predictions in two new files (smooth-... .txt)
             if element == 1.6:
                 dc.export_training_data(filename='smooth-model.txt')
                 # make predictions on the testing set, based on the training set probabilities
