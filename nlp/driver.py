@@ -73,7 +73,6 @@ if __name__ == '__main__':
             wrdln = WordLengthIterator(task2_X, task2_y)
             # performs the iterations
             wrdln.iterate()
-
         elif user_input == '##':
             break
         else:
