@@ -69,7 +69,7 @@ class WordLengthIterator:
             accuracy_results.append(res)
         print('\nTask 2.3 complete. Graph: \n\n')
         # performance (accuracy here) against nbr words left ( = word lengths removed)
-        plt.plot([">=2", ">=4", "<=9"], [i for i in accuracy_results])
+        plt.plot(["<=2", "<=4", ">=9"], [i for i in accuracy_results])
         plt.title('Naives Bayes Classification with Word Length (2.3)')
         plt.ylabel('Accuracy')
         plt.xlabel('Removed Words Lengths')
