@@ -64,14 +64,15 @@ class WordLengthIterator:
                 print(f'  LENGTH >= {element}')
             # runs the above prepare function (generates training set)
             wlc.train(training_data=self.X)
-            # report model data
-            wlc.export_training_data(filename=f'length-model_{element}.txt')
             # test the model
             preds = wlc.predict(self.y)
             # calculate accuracy based on new training data
             res = wlc.calculate_accuracy(preds, self.y)
-            # report results from test set Y
-            wlc.export_predictions(preds, self.y, filename=f'length-result_{element}.txt')
+            if element == 9:
+              # report model data
+              wlc.export_training_data(filename=f'length-model.txt')
+              # report results from test set Y
+              wlc.export_predictions(preds, self.y, filename=f'length-result.txt')
             print(f'    Accuracy: {res}')
             # add new accuracy to list
             accuracy_results.append(res)
@@ -86,4 +87,3 @@ class WordLengthIterator:
         plt.ylabel('Accuracy')
         plt.xlabel('Words Left In Vocab')
         plt.show()
-
