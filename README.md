@@ -1,4 +1,7 @@
-### COMP_472 A1
+### Projects:
+
+## COVID themed graph traversal
+## Naive Bayes IMDB review scraper
 
 ### Requirements
 
