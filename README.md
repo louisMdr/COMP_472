@@ -1,7 +1,7 @@
 ### Projects:
 
-## COVID themed graph traversal
-## Naive Bayes IMDB review scraper
+#### COVID themed graph traversal
+#### Naive Bayes IMDB review scraper
 
 ### Requirements
 
